@@ -1,15 +1,40 @@
 <?php
+require_once 'includes/db.php';
+require_once 'libraries/messages.php';
 
-CONST DB_DSN = 'mysql:dbname=db;host=db;port=3306';
-CONST DB_USER = 'db';
-CONST DB_PWD = 'db';
+$search = $_GET['search'] ?? '';
 
-$db = new PDO(DB_DSN, DB_USER, DB_PWD);
+$result = getMessages($search);
 
-$sql = 'SELECT * FROM users';
+include_once 'partials/header.php';
+?>
+    <div class="messages">
+        <form method="POST" action="./addMessage.php">
+            <div class="message message-new">
+            
+                <div class="avatar">JD</div>
 
-$result = $db->query($sql);
+                <div class="content">
+                    <textarea name="tweet"></textarea>
+                    <button type="submit">Tweet</button>
+                </div>
+            </div>
+        </form>
 
-foreach ( $result as $row) {
-    echo '<li>' . $row['email'] . '</li>';
-}
+        <form>
+            <input type="text" name="search" placeholder="Search">
+            <button type="submit">Search</button>
+        </form>
+
+        <?php 
+        require_once 'includes/db.php';
+
+        foreach($result as $row) {
+            //print_r($row);
+            include 'views/message.php';
+            //require 'views/message.php';
+        } 
+            
+        ?>
+    </div>
+<?php include_once 'partials/footer.php'; ?>
